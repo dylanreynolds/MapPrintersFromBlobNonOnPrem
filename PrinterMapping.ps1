@@ -7,22 +7,22 @@ $folder = "C:\ProgramData\IntunePrintDrivers"
 # Update below custom objects to create required printer mappings
 $printMappingConfig += [PSCUSTOMOBJECT]@{
     printerName = "FX ApeosPort-VII C6673"
-    printerPortName = "IP_10.64.2.22"
-    printerPortIP = "10.64.2.22"
+    printerPortName = "IP_xxx.xxx.xxx.xxx"
+    printerPortIP = "xxx.xxx.xxx.xxx"
     driverName = "FX ApeosPort-VII C6673 PCL 6"
 }
 
 <# $printMappingConfig += [PSCUSTOMOBJECT]@{
     printerName = "Head Office - GF Canon MFP Printer"
-    printerPortName = "IP_10.2.41.71"
-    printerPortIP = "10.2.41.71"
+    printerPortName = "IP_xxx.xxx.xxx.xxx"
+    printerPortIP = "xxx.xxx.xxx.xxx"
     driverName = "Canon Generic UFR II V4"
 } #>
 
 # $printMappingConfig += [PSCUSTOMOBJECT]@{
 #     printerName = "Head Office - Dispatch - OKI Printer"
-#     printerPortName = "IP_10.2.41.81"
-#     printerPortIP = "10.2.41.81"
+#     printerPortName = "IP_xxx.xxx.xxx.xxx"
+#     printerPortIP = "xxx.xxx.xxx.xxx"
 #     driverName = "OKI B401"
 # }
 
@@ -45,12 +45,8 @@ $printMappingConfig.GetEnumerator() | ForEach-Object {
             if ($($PSItem.printerName) -match "Canon") {
                 # Get Canon print drivers from blob
                 Write-Output "Downloading Canon drivers."
-                wget "https://eyelighting.blob.core.windows.net/printerdrivers/cnnv4_cb3_amd64.cab" -outfile $folder'\cnnv4_cb3_amd64.cab'
-                # wget "https://eyelighting.blob.core.windows.net/printerdrivers/cnnv4_cb3_bcommon.cab" -outfile $folder'\cnnv4_cb3_bcommon.cab'
-                # wget "https://eyelighting.blob.core.windows.net/printerdrivers/cnnv4_cb3_bgeneric.cab" -outfile $folder'\cnnv4_cb3_bgeneric.cab'
-                # wget "https://eyelighting.blob.core.windows.net/printerdrivers/cnnv4_cb3_fgeneric.cat" -outfile $folder'\cnnv4_cb3_fgeneric.cat'
-                # wget "https://eyelighting.blob.core.windows.net/printerdrivers/cnnv4_cb3_fgeneric.inf" -outfile $folder'\cnnv4_cb3_fgeneric.inf'
-                # wget "https://eyelighting.blob.core.windows.net/printerdrivers/cnnv4_cb3_i386.cab" -outfile $folder'\cnnv4_cb3_i386.cab'
+                wget "https://yourtenancy.blob.core.windows.net/printerdrivers/cnnv4_cb3_amd64.cab" -outfile $folder'\cnnv4_cb3_amd64.cab'
+
             } elseif ($($PSItem.printerName) -match "OKI") {
                 # Get OKI print drivers from blob
                 Write-Output "Downloading OKI drivers."
@@ -62,7 +58,7 @@ $printMappingConfig.GetEnumerator() | ForEach-Object {
 
         if ($($PSItem.printerName) -match "Canon") {
             # Add print driver via pnputil
-            pnputil -i -a "C:\Program Data\IntunePrintDrivers\cnnv4_cb3_fgeneric.inf"
+            pnputil -i -a "C:\ProgramData\IntunePrintDrivers\cnnv4_cb3_fgeneric.inf"
             # Add print driver via pnputil
             Add-PrinterPort -Name $($PSItem.printerPortName) -PrinterHostAddress $($PSItem.printerPortIP) -ErrorAction SilentlyContinue
             Add-PrinterDriver -Name $($PSItem.driverName)
